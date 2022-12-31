@@ -430,7 +430,7 @@
 
 <body>
     <div id="uForm">
-        <b>Sealang - Shortcut v2.1</b><br />
+        <b>Sealang - Shortcut v2.2</b><br />
         <br /><button id="clearText" onclick="clearTextArea()">Clear Text</button><br />
 
         <textarea required cols="9" rows="2" id="uType" name="word" placeholder="Enter any Unicode text"
@@ -485,7 +485,8 @@
     <script>
         function listenEnter() {
             var inputForm = document.getElementById('uType');
-            inputForm.addEventListener('keypress', function (e) {
+            // even keypress is deprecated and doesn't work on Mobile devices, use keydown instead
+            inputForm.addEventListener('keydown', function (e) {
                 if (e.keyCode == "13" || e.key == "Enter") {
 
                     // Auto click lookup button
@@ -506,7 +507,7 @@
         // if ('serviceWorker' in navigator) {
         //     navigator.serviceWorker.register("./serviceWorker.js", { scope: "/" })
         // }
-        
+
     </script>
 </body>
 
