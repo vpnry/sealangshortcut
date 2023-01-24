@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <title>Sealang Burmese Shortcut</title>
+    <style>
+        body {
+            padding: 10px;
+            background: cornsilk;
+            font-family: Arial, Helvetica, sans-serif, "Myanmar3", "Pyidaungsu";
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        u {
+            text-decoration: none;
+            border-bottom: solid red 1px;
+        }
+
+        c {
+            font-size: x-large;
+            font-weight: bold;
+            color: darkgrey;
+        }
+
+        d {
+            font-size: small;
+            font-style: italic;
+        }
+
+        z {
+            font-size: small;
+            font-style: italic;
+            color: darkgrey;
+        }
+
+        .fm {
+            text-align: left;
+        }
+
+        #velthuis td {
+            border-bottom: solid grey 1px;
+        }
+
+        #uForm {
+            margin: 0 1%;
+            background: #cbd0d7;
+            text-align: center;
+            border: solid orange 1px;
+            border-radius: 15px;
+            /* https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Background_and_Borders/Box-shadow_generator */
+            -webkit-box-shadow: -3px -8px 11px -1px #e1e2e8, 4px 8px 5px 2px #d3d1d3;
+            -moz-box-shadow: -3px -8px 11px -1px #e1e2e8, 4px 8px 5px 2px #d3d1d3;
+            box-shadow: -3px -8px 11px -1px #e1e2e8, 4px 8px 5px 2px #d3d1d3;
+        }
+
+        #allResults {
+            margin: 0 1%;
+        }
+
+        #noResult {
+            background: #cbd0d7;
+            margin: 0 1%;
+            text-align: left;
+            border: solid grey 1px;
+            border-radius: 15px;
+            padding: 20px;
+            -webkit-box-shadow: -3px -8px 11px -1px #e1e2e8, 4px 8px 5px 2px #d3d1d3;
+            -moz-box-shadow: -3px -8px 11px -1px #e1e2e8, 4px 8px 5px 2px #d3d1d3;
+            box-shadow: -3px -8px 11px -1px #e1e2e8, 4px 8px 5px 2px #d3d1d3;
+        }
+
+        .title {
+            border: solid #d3d1d3 1px;
+            border-radius: 15px;
+            background: #cbd0d7;
+            padding: 5px;
+        }
+
+        #uType,
+        #convertedArea {
+            width: 70%;
+            max-width: 70%;
+            text-align: center;
+            color: brown;
+            font-weight: bold;
+            font-size: x-large;
+            border-radius: 10px;
+        }
+
+        #searchButton {
+            border-radius: 10px;
+            font-size: x-large;
+            font-size: small;
+        }
+
+        #toggleButton {
+            background: #58e973;
+            font-size: large;
+            border-radius: 10px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .tCenter {
+            margin: 0 auto;
+        }
+
+        .tRight {
+            text-align: right;
+        }
+
+        .tLeft {
+            text-align: left;
+        }
+
+        .tRight2 {
+            text-align: right;
+            padding: 5px;
+        }
+
+        .tLeft2 {
+            text-align: left;
+            padding: 5px;
+        }
+
+        #clearText {
+            border: orange dashed 1px;
+            color: black;
+            border-radius: 10%;
+        }
+
+        #lookupButton {
+            border: #4bd763 solid 1px;
+            color: #4bd763;
+            font-weight: bold;
+            font-size: large;
+            /* background: #4bd763; */
+            border-radius: 5%;
+        }
+
+        #copyButtonID {
+            border: green dashed 1px;
+            color: green;
+        }
+
+        .greyText {
+            color: grey;
+            font-style: italic;
+        }
+
+        .circleRadio input[type="radio"]:checked {
+            /* Radio element, when checked */
+            box-shadow: 0 -8px 6px -1px #4bd763, 0 8px 6px 0 #4bd763;
+        }
+
+        .hid {
+            display: none;
+        }
+
+        /**
+ * This .form-switch class is adapted from 
+ * Realistic iOS Switch In Pure CSS
+ * Link: https://www.cssscript.com/realistic-ios-switch-pure-css/
+ * Author: Pontus Nilsson
+ * License: MIT
+ */
+
+        .form-switch {
+            display: inline-block;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .form-switch i {
+            position: relative;
+            display: inline-block;
+            margin-right: 0.5rem;
+            width: 46px;
+            height: 26px;
+            background-color: #e6e6e6;
+            border-radius: 23px;
+            vertical-align: text-bottom;
+            /* transition: all 0.3s linear; */
+        }
+
+        .form-switch i::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 42px;
+            height: 22px;
+            background-color: #fff;
+            border-radius: 11px;
+            transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+            /* transition: all 0.25s linear; */
+        }
+
+        .form-switch i::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 22px;
+            height: 22px;
+            background-color: #fff;
+            border-radius: 11px;
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24);
+            transform: translate3d(2px, 2px, 0);
+            /* transition: all 0.2s ease-in-out; */
+        }
+
+        .form-switch:active i::after {
+            width: 28px;
+            transform: translate3d(2px, 2px, 0);
+        }
+
+        .form-switch:active input:checked+i::after {
+            transform: translate3d(16px, 2px, 0);
+        }
+
+        .form-switch input {
+            display: none;
+        }
+
+        .form-switch input:checked+i {
+            background-color: #4bd763;
+        }
+
+        .form-switch input:checked+i::before {
+            transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0);
+        }
+
+        .form-switch input:checked+i::after {
+            transform: translate3d(22px, 2px, 0);
+        }
+
+        #introRecent,
+        #wordList {
+            margin: 0 1%;
+            text-align: left;
+            border-radius: 15px;
+        }
+
+        #credits {
+            margin: 0 1%;
+            text-align: left;
+            font-size: 5px;
+            color: grey;
+        }
+
+        #smallNote {
+            font-size: smaller;
+            color: grey;
+        }
+
+        .blueme {
+            color: blue;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        /**
+         * @uPNRY - 27 Dec 2022
+         * Github: vpnry/sealang
+         * Shortcuts when using Sealang library - Burmese
+         * http://sealang.net/api/api.pl?service=dictionary&language=burmese&query=happy
+         */
+
+        var localKEY = "recentSealangLookUp";
+        var queryLanguage = `burmese`;
+        var LOOKUP_API = `http://sealang.net/api/api.pl?`;
+
+        function setLookupAPI() {
+            var queryType = document.querySelector(
+                "input[name='queryType']:checked"
+            ).value;
+            // Reset query url
+            var sealang_query_url = `http://sealang.net/api/api.pl?`;
+
+            if (queryType) {
+                if (queryType == "google") {
+                    LOOKUP_API = `https://translate.google.com/?sl=auto&tl=en`;
+                } else {
+                    LOOKUP_API = `${sealang_query_url}service=${queryType}&lang=${queryLanguage}`;
+                }
+            } else {
+                LOOKUP_API = `${sealang_query_url}service=dictionary&lang=${queryLanguage}`;
+            }
+            return queryType;
+        }
+
+        function lookup() {
+            var queryWord = document.getElementById("uType");
+            queryWord = queryWord.value.trim().toLowerCase();
+            queryWord = queryWord || "";
+
+            if (queryWord.length > 0) {
+                var typeValue = setLookupAPI();
+                if (typeValue == "google") {
+                    window.open(
+                        `${LOOKUP_API}&text=${queryWord}`,
+                        `_sealangWindow${typeValue}`
+                    );
+                } else {
+                    window.open(
+                        `${LOOKUP_API}&query=${queryWord}`,
+                        `_sealangWindow${typeValue}`
+                    );
+                }
+
+                var saveWordString = loadLastWords(localKEY);
+
+                displayHTML("recentWordID", prepareHTML(saveWordString, queryWord));
+
+            } else {
+                alert("Please enter unicode text!");
+            }
+        }
+
+        function prepareHTML(txt, queryWord) {
+            txt = txt || "@_@";
+            var savedStrArray = txt.split("@_@");
+
+            if (!savedStrArray.includes(queryWord)) {
+                savedStrArray.push(queryWord);
+                saveLocal(localKEY, txt + "@_@" + queryWord);
+            }
+
+            savedStrArray.reverse();
+
+            var chunk = "";
+            for (let w of savedStrArray) {
+                w = w.trim();
+                if (w.length > 0) {
+                    chunk += `<li><span class="blueme" onclick="putTextOnInput(this)">${w}</span></li>`;
+                }
+            }
+            var htmlRecentWords = `<div id="wordList">🤗 be well and happy!</div>`;
+            if (chunk.length > 0) {
+                htmlRecentWords = `<div id="wordList"><ol reversed>${chunk}</ol></div>`;
+            }
+
+            return htmlRecentWords;
+        }
+
+        function displayHTML(id, html) {
+            var showEl = document.getElementById(id);
+            showEl.innerHTML = html;
+        }
+
+        function loadLastWords(key) {
+            var recentWords = localStorage.getItem(key);
+            if (!recentWords) {
+                recentWords = "";
+            }
+            return recentWords;
+        }
+
+        function saveLocal(saveKey, str) {
+            localStorage.setItem(saveKey, str);
+        }
+        function clearTextArea() {
+            document.getElementById("uType").value = "";
+            document.getElementById("uType").focus();
+        }
+
+        function clearLocalRecentWord() {
+            localStorage.removeItem(localKEY);
+            document.getElementById("recentWordID").innerHTML = "";
+        }
+
+        function putTextOnInput(e) {
+            var text = e.textContent;
+            text = text.trim() || "";
+
+            var inputArea = document.getElementById("uType");
+            inputArea.value = text;
+            inputArea.focus();
+
+            // Auto click lookup button
+            document.getElementById("lookupButton").click();
+        }
+
+        function showinfo() {
+            var html = `
+            <h1 id="sealang-burmese-shortcut">Sealang Burmese Shortcut</h1>
+                        
+            <p>I found <a href="http://sealang.net/burmese">SEAlang Library Burmese</a> helpful for studying Burmese. Its classic frame UI provides many advanced features and still renders well on computers or large-screen devices. However, on small-screen devices, it is a little bit inconvenient.</p>
+            <p>This Sealang Shortcut is a simplified &#39;shortcut&#39; for common queries. For other advanced queries, use the above <a href="http://sealang.net/burmese">website</a> instead.</p>
+            <h2 id="download-android-app-and-online-web">Download Android app and online Web</h2>
+            <ul>
+            <li><p><a href="https://vpnry.github.io/sealangshortcut/sealangshortcut.apk">Download Android app sealangshortcut.apk</a></p>
+            </li>
+            <li><p><a href="https://vpnry.github.io/sealangshortcut">Online web</a></p>
+            </li>
+            <li><p><a href="https://github.com/vpnry/sealangshortcut">Source code</a></p>
+            </li>
+            </ul>
+            <h2 id="attributions">Attributions</h2>
+            <ul>
+            <li><p>SEAlang Web <a href="http://sealang.net/api/api.pl?service=identify">API</a></p>
+            </li>
+            <li><p>For other languages and more features, check <a href="http://sealang.net/library">SEAlang Library</a></p>
+            </li>
+            <li><p>App and web icons are generated by <a href="https://icon.kitchen">icon kitchen</a></p>
+            </li>
+            <li><p>Android Web-view <a href="https://github.com/slymax/webview">template</a></p>
+            </li>
+            </ul>
+
+            
+            `;
+
+            document.getElementById('recentWordID').innerHTML = html;
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <div id="uForm">
+        <b>Sealang - Shortcut v2.2</b><br />
+        <br /><button id="clearText" onclick="clearTextArea()">Clear Text</button><br />
+
+        <textarea required cols="9" rows="2" id="uType" name="word" placeholder="Enter any Unicode text"
+            value=""></textarea>
+        <br />
+        <button id="lookupButton" onclick="lookup()">Look up</button>
+        <table class="tCenter">
+            <tr>
+                <td class="tLeft" colspan="4"><span class="greyText">Lookup Type</span></td>
+            </tr>
+            <tr>
+                <td class="tRight">
+                    <label class="form-switch"><input checked="checked" type="radio" id="dictionary" name="queryType"
+                            value="dictionary"><i></i></label>
+                </td>
+                <td class="tLeft">Dictionary</td>
+                <td class="tRight">
+                    <label disabled class="form-switch"><input type="radio" id="bitext" name="queryType"
+                            value="bitext"><i></i></label>
+                </td>
+                <td class="tLeft">Bitexts</td>
+            </tr>
+            <tr></tr>
+            <tr></tr>
+            <tr>
+                <td class="tRight">
+                    <label disabled class="form-switch"><input type="radio" id="corpus" name="queryType"
+                            value="corpus"><i></i></label>
+                </td>
+                <td class="tLeft">Corpus</td>
+                <td class="tRight">
+                    <label disabled class="form-switch"><input type="radio" id="google" name="queryType"
+                            value="google"><i></i></label>
+                </td>
+                <td class="tLeft">Google</td>
+            </tr>
+            <tr></tr>
+
+
+        </table>
+
+        <br>
+        </form>
+        <span id="smallNote"><span style="text-decoration: none; color:grey; cursor: pointer;" onclick="showinfo()"> ℹ️
+                info</span><br><span style="font-size: xx-small;font-style: italic;">Notes: Bitexts and Corpus searches
+                may take a while.</span>
+    </div>
+    <br>
+    <button id="introRecent" onclick="clearLocalRecentWord()">Clear recent words</button>
+    <div id="recentWordID"></div>
+
+    <script>
+        function listenEnter() {
+            var inputForm = document.getElementById('uType');
+            // even keypress is deprecated and doesn't work on Mobile devices, use keydown instead
+            inputForm.addEventListener('keydown', function (e) {
+                if (e.keyCode == "13" || e.key == "Enter") {
+
+                    // Auto click lookup button
+                    document.getElementById("lookupButton").click();
+                }
+            }, { passive: false });
+        }
+        function loadLocalList() {
+            displayHTML("recentWordID", prepareHTML(loadLastWords(localKEY), ''));
+        }
+        function runOnLoad() {
+            loadLocalList();
+            listenEnter();
+        }
+        window.onload = runOnLoad;;
+
+        // Todo: disable serviceWorker in Android Webview file:///android
+        // if ('serviceWorker' in navigator) {
+        //     navigator.serviceWorker.register("./serviceWorker.js", { scope: "/" })
+        // }
+
+    </script>
+</body>
+
+</html>

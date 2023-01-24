@@ -14,6 +14,8 @@ This Sealang Shortcut is a simplified 'shortcut' for common queries. For other a
 
 ## Attributions
 
++ The pronunciation data is adapted from [myG2P](https://github.com/ye-kyaw-thu/myG2P/) - Creative Commons Attribution-NonCommercial-Share Alike 4.0 International (CC BY-NC-SA 4.0) License [Details Info of License](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 + SEAlang Web [API](http://sealang.net/api/api.pl?service=identify)
 
 + For other languages and more features, check [SEAlang Library](http://sealang.net/library)
