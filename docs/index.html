@@ -538,9 +538,9 @@
         window.onload = runOnLoad;;
 
         // Todo: disable serviceWorker in Android Webview file:///android
-        // if ('serviceWorker' in navigator) {
-        //     navigator.serviceWorker.register("./serviceWorker.js", { scope: "/" })
-        // }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("./serviceWorker.js", { scope: "/" })
+        }
 
     </script>
 </body>
