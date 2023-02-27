@@ -6,7 +6,7 @@ This Sealang Shortcut is a simplified 'shortcut' for common queries. For other a
 
 ## Download Android app and online Web
 
-+ [Download Android app sealangshortcut.apk](https://vpnry.github.io/sealangshortcut/sealangshortcut.apk)
++ [Download latest Android APK at](https://github.com/vpnry/sealangshortcut/releases)
  
 + [Online web](https://vpnry.github.io/sealangshortcut)
 

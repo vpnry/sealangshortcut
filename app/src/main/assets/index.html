@@ -267,6 +267,19 @@
             color: grey;
         }
 
+        .smallInstruction {
+            font-size: smaller;
+            color: grey;
+        }
+
+        .buildLangListMenuClass {
+            font-size: xx-small;
+        }
+
+        #uSelectLangCode {
+            font-size: xx-small;
+        }
+
         .blueme {
             color: blue;
             font-weight: bold;
@@ -275,133 +288,181 @@
     </style>
     <script>
         /**
+         * Last update: 27 Feb 2023
          * @uPNRY - 27 Dec 2022
          * Github: vpnry/sealang
          * Shortcuts when using Sealang library - Burmese
          * http://sealang.net/api/api.pl?service=dictionary&language=burmese&query=happy
          */
-
         
  
         var mIPA = {};
 
-        var localKEY = "recentSealangLookUp";
+        var KEY_USERLANG = "userLangSealangLookUp";
+        var KEY_RECENTWORDS = "recentSealangLookUp";
+        const DEFAULT_LANG = "en";
+
+        let usedLangCode = localStorage.getItem(KEY_USERLANG);
+        let currentLangCode = usedLangCode ? usedLangCode : DEFAULT_LANG;
+
         var queryLanguage = `burmese`;
-        var LOOKUP_API = `http://sealang.net/api/api.pl?`;
+        var SEAL_LOOKUP_API = `http://sealang.net/api/api.pl?`;
 
-        function setLookupAPI() {
-            var queryType = document.querySelector(
-                "input[name='queryType']:checked"
-            ).value;
-            // Reset query url
-            var sealang_query_url = `http://sealang.net/api/api.pl?`;
+        const googleTranslateLangCode = { /**  * This supported language list is from https://cloud.google.com/translate/docs/languages  * Retrieved on 27 Feb 2023  * Language: "ISO-639 code"  */ Afrikaans: "af", Albanian: "sq", Amharic: "am", Arabic: "ar", Armenian: "hy", Assamese: "as", Aymara: "ay", Azerbaijani: "az", Bambara: "bm", Basque: "eu", Belarusian: "be", Bengali: "bn", Bhojpuri: "bho", Bosnian: "bs", Bulgarian: "bg", Catalan: "ca", Cebuano: "ceb", "Chinese (Simplified)": "zh-CN", "Chinese (Traditional)": "zh-TW", Corsican: "co", Croatian: "hr", Czech: "cs", Danish: "da", Dhivehi: "dv", Dogri: "doi", Dutch: "nl", English: "en", Esperanto: "eo", Estonian: "et", Ewe: "ee", "Filipino (Tagalog)": "fil", Finnish: "fi", French: "fr", Frisian: "fy", Galician: "gl", Georgian: "ka", German: "de", Greek: "el", Guarani: "gn", Gujarati: "gu", "Haitian Creole": "ht", Hausa: "ha", Hawaiian: "haw", Hebrew: "he or iw", Hindi: "hi", Hmong: "hmn", Hungarian: "hu", Icelandic: "is", Igbo: "ig", Ilocano: "ilo", Indonesian: "id", Irish: "ga", Italian: "it", Japanese: "ja", Javanese: "jv or jw", Kannada: "kn", Kazakh: "kk", Khmer: "km", Kinyarwanda: "rw", Konkani: "gom", Korean: "ko", Krio: "kri", Kurdish: "ku", "Kurdish (Sorani)": "ckb", Kyrgyz: "ky", Lao: "lo", Latin: "la", Latvian: "lv", Lingala: "ln", Lithuanian: "lt", Luganda: "lg", Luxembourgish: "lb", Macedonian: "mk", Maithili: "mai", Malagasy: "mg", Malay: "ms", Malayalam: "ml", Maltese: "mt", Maori: "mi", Marathi: "mr", "Meiteilon (Manipuri)": "mni-Mtei", Mizo: "lus", Mongolian: "mn", "Myanmar (Burmese)": "my", Nepali: "ne", Norwegian: "no", "Nyanja (Chichewa)": "ny", "Odia (Oriya)": "or", Oromo: "om", Pashto: "ps", Persian: "fa", Polish: "pl", "Portuguese (Portugal, Brazil)": "pt", Punjabi: "pa", Quechua: "qu", Romanian: "ro", Russian: "ru", Samoan: "sm", Sanskrit: "sa", "Scots Gaelic": "gd", Sepedi: "nso", Serbian: "sr", Sesotho: "st", Shona: "sn", Sindhi: "sd", "Sinhala (Sinhalese)": "si", Slovak: "sk", Slovenian: "sl", Somali: "so", Spanish: "es", Sundanese: "su", Swahili: "sw", Swedish: "sv", "Tagalog (Filipino)": "tl", Tajik: "tg", Tamil: "ta", Tatar: "tt", Telugu: "te", Thai: "th", Tigrinya: "ti", Tsonga: "ts", Turkish: "tr", Turkmen: "tk", "Twi (Akan)": "ak", Ukrainian: "uk", Urdu: "ur", Uyghur: "ug", Uzbek: "uz", Vietnamese: "vi", Welsh: "cy", Xhosa: "xh", Yiddish: "yi", Yoruba: "yo", Zulu: "zu",   };
 
-            if (queryType) {
-                if (queryType == "google") {
-                    LOOKUP_API = `https://translate.google.com/?sl=auto&tl=en`;
-                } else {
-                    LOOKUP_API = `${sealang_query_url}service=${queryType}&lang=${queryLanguage}`;
-                }
-            } else {
-                LOOKUP_API = `${sealang_query_url}service=dictionary&lang=${queryLanguage}`;
-            }
-            return queryType;
-        }
+        function buildLangListMenu() {
+  let html = `
+        <label for="uSelectLangCode">Translate into</label>
+        <select id="uSelectLangCode" name="uSelectLangCode">
+        <option disabled value="">--Select a language--</option>`;
+  for (const k in googleTranslateLangCode) {
+    html += `<option value="${googleTranslateLangCode[k]}" ${
+      googleTranslateLangCode[k] == currentLangCode ? "selected" : ""
+    } >${k}</option>`;
+  }
+  html += `<option disabled value="">--27 Feb 2023--</option>`;
+  html += `</select>`;
+  document.getElementById("buildLangListMenu").innerHTML = html;
+  listen_UserSelectLang("uSelectLangCode");
+}
 
-        function lookup() {
-            var queryWord = document.getElementById("uType");
-            queryWord = queryWord.value.trim().toLowerCase();
-            queryWord = queryWord || "";
+function listen_UserSelectLang(id) {
+  document
+    .getElementById(id)
+    .addEventListener("change", saveUserLangCode, { passive: false });
+}
 
-            if (queryWord.length > 0) {
-                var typeValue = setLookupAPI();
-                if (typeValue == "google") {
-                    window.open(
-                        `${LOOKUP_API}&text=${queryWord}`,
-                        `_sealangWindow${typeValue}`
-                    );
-                } else {
-                    window.open(
-                        `${LOOKUP_API}&query=${queryWord}`,
-                        `_sealangWindow${typeValue}`
-                    );
-                }
+function saveUserLangCode() {
+  let select = document.getElementById("uSelectLangCode");
+  let svalue = select.options[select.selectedIndex].value;
+  svalue = svalue ? svalue : DEFAULT_LANG;
+  currentLangCode = svalue;
+  localStorage.setItem(KEY_USERLANG, svalue);
+}
 
-                var saveWordString = loadLastWords(localKEY);
+function loadSavedLangCode(id) {
+  try {
+    let ele = document.getElementById(id);
+    ele.value = currentLangCode;
+  } catch (e) {
+    console.log(`${e} \n\nError when loading last used lang code.
+            Is this id ${id} changed in the UI?
+            It is now removing the mising key and reloading.`);
+    localStorage.remove(KEY_USERLANG);
+    window.location.reload(true);
+  }
+}
 
-                displayHTML("recentWordID", prepareHTML(saveWordString, queryWord));
+function encodeURL(url) {
+  return encodeURIComponent(url);
+}
 
-            } else {
-                alert("Please enter unicode text!");
-            }
-        }
+function lookup() {
+  var queryWord = document.getElementById("uType");
+  queryWord = queryWord.value.trim().toLowerCase();
+  queryWord = queryWord || "";
 
-        function prepareHTML(txt, queryWord) {
-            txt = txt || "@_@";
-            var savedStrArray = txt.split("@_@");
+  if (queryWord.length > 0) {
+    var queryTypeValue = document.querySelector(
+      "input[name='queryType']:checked"
+    ).value;
 
-            if (!savedStrArray.includes(queryWord)) {
-                savedStrArray.push(queryWord);
-                saveLocal(localKEY, txt + "@_@" + queryWord);
-            }
+    // Set default query type dictionary
+    queryTypeValue = queryTypeValue || "dictionary";
 
-            savedStrArray.reverse();
+    if (queryTypeValue == "google") {
+      window.open(
+        `https://translate.google.com/?sl=auto&tl=${currentLangCode}&text=${queryWord}`,
+        `_sealangWindow${queryTypeValue}`
+      );
+    } else {
+      let finalSeaLangURL = `${SEAL_LOOKUP_API}service=${queryTypeValue}&lang=${queryLanguage}&query=${queryWord}`;
 
-            var chunk = "";
-            for (let w of savedStrArray) {
-                w = w.trim();
-                if (w.length > 0) {
-                    chunk += `<li><span class="blueme" onclick="putTextOnInput(this)">${w}</span></li>`;
-                }
-            }
-            var htmlRecentWords = `<div id="wordList">🤗 be well and happy!</div>`;
-            if (chunk.length > 0) {
-                htmlRecentWords = `<div id="wordList"><ol reversed>${chunk}</ol></div>`;
-            }
+      if (currentLangCode != "en") {
+        // Must encode the URL to let it works
+        finalSeaLangURL = `https://translate.google.com/translate?sl=en&tl=${currentLangCode}&hl=${currentLangCode}&u=${encodeURL(
+          finalSeaLangURL
+        )}`;
+      }
 
-            return htmlRecentWords;
-        }
+      // Cross-Origin-Opener-Policy causes the browser to open the URL in many windows
+      window.open(finalSeaLangURL, `_sealangWindow${queryTypeValue}`);
+    }
 
-        function displayHTML(id, html) {
-            var showEl = document.getElementById(id);
-            showEl.innerHTML = html;
-        }
+    var saveWordString = loadSavedData(KEY_RECENTWORDS);
+    displayHTML("recentWordID", prepareHTML(saveWordString, queryWord));
+  } else {
+    alert("Please enter unicode text!");
+  }
+}
 
-        function loadLastWords(key) {
-            var recentWords = localStorage.getItem(key);
-            if (!recentWords) {
-                recentWords = "";
-            }
-            return recentWords;
-        }
+function prepareHTML(txt, queryWord) {
+  txt = txt || "@_@";
+  var savedStrArray = txt.split("@_@");
 
-        function saveLocal(saveKey, str) {
-            localStorage.setItem(saveKey, str);
-        }
-        function clearTextArea() {
-            document.getElementById("uType").value = "";
-            document.getElementById("uType").focus();
-        }
+  if (!savedStrArray.includes(queryWord)) {
+    savedStrArray.push(queryWord);
+    saveLocalStorage(KEY_RECENTWORDS, txt + "@_@" + queryWord);
+  }
 
-        function clearLocalRecentWord() {
-            localStorage.removeItem(localKEY);
-            document.getElementById("recentWordID").innerHTML = "";
-        }
+  savedStrArray.reverse();
 
-        function putTextOnInput(e) {
-            var text = e.textContent;
-            text = text.trim() || "";
+  var chunk = "";
+  for (let w of savedStrArray) {
+    w = w.trim();
+    if (w.length > 0) {
+      chunk += `<li><span class="blueme" onclick="putTextOnInput(this)">${w}</span></li>`;
+    }
+  }
+  var htmlRecentWords = `<div id="wordList">🤗 be well and happy!</div>`;
+  if (chunk.length > 0) {
+    htmlRecentWords = `<div id="wordList"><ol reversed>${chunk}</ol></div>`;
+  }
 
-            var inputArea = document.getElementById("uType");
-            inputArea.value = text;
-            inputArea.focus();
+  return htmlRecentWords;
+}
 
-            // Auto click lookup button
-            document.getElementById("lookupButton").click();
-        }
+function displayHTML(id, html) {
+  var showEl = document.getElementById(id);
+  showEl.innerHTML = html;
+}
 
-        function showinfo() {
-            var html = `
+function loadSavedData(key) {
+  var recentWords = localStorage.getItem(key);
+  if (!recentWords) {
+    recentWords = "";
+  }
+  return recentWords;
+}
+
+function saveLocalStorage(saveKey, str) {
+  localStorage.setItem(saveKey, str);
+}
+
+function clearTextArea() {
+  document.getElementById("uType").value = "";
+  document.getElementById("uType").focus();
+}
+
+function clearSavedRecentWords() {
+  localStorage.removeItem(KEY_RECENTWORDS);
+  document.getElementById("recentWordID").innerHTML = "";
+}
+
+function putTextOnInput(e) {
+  var text = e.textContent;
+  text = text.trim() || "";
+
+  var inputArea = document.getElementById("uType");
+  inputArea.value = text;
+  inputArea.focus();
+
+  // Auto click lookup button
+  document.getElementById("lookupButton").click();
+}
+
+function showinfo() {
+  var html = `
           
 
             <h1 id="sealang-burmese-shortcut">Sealang Burmese Shortcut</h1>
@@ -410,8 +471,9 @@
             <p>This Sealang Shortcut is a simplified &#39;shortcut&#39; for common queries. For other advanced queries, use the above <a href="http://sealang.net/burmese">website</a> instead.</p>
             <h2 id="download-android-app-and-online-web">Download Android app and online Web</h2>
             <ul>
-            <li><p><a href="https://vpnry.github.io/sealangshortcut/sealangshortcut.apk">Download Android app sealangshortcut.apk</a></p>
+            <li><p><a href="https://github.com/vpnry/sealangshortcut/releases" target="_blank">Download latest Android APK</a></p>
             </li>
+
             <li><p><a href="https://vpnry.github.io/sealangshortcut">Online web</a></p>
             </li>
             <li><p><a href="https://github.com/vpnry/sealangshortcut">Source code</a></p>
@@ -435,8 +497,10 @@
             
             `;
 
-            document.getElementById('recentWordID').innerHTML = html;
-        }
+  document.getElementById("recentWordID").innerHTML = html;
+}
+
+
 
     </script>
 
@@ -444,7 +508,7 @@
 
 <body>
     <div id="uForm">
-        <b>Sealang - Shortcut v2.3</b><br />
+        <b>Sealang - Shortcut v2.4</b><br />
         <br /><button id="clearText" onclick="clearTextArea()">Clear Text</button><br />
 
         <textarea required cols="9" rows="2" id="uType" name="word" placeholder="Enter any Unicode text"
@@ -482,19 +546,20 @@
                 </td>
                 <td class="tLeft">Google</td>
             </tr>
-            <tr></tr>
-
+            <tr>
+                <td colspan="4"><span class="smallInstruction" style="font-size: xx-small;">Notes: Bitexts and Corpus searches
+                    may take a while.</span></td>
+            </tr>
 
         </table>
 
-        <br>
         </form>
-        <span id="smallNote"><span style="text-decoration: none; color:grey; cursor: pointer;" onclick="showinfo()"> ℹ️
-                info</span><br><span style="font-size: xx-small;font-style: italic;">Notes: Bitexts and Corpus searches
-                may take a while.</span>
+        <div class="buildLangListMenuClass" id="buildLangListMenu"></div><span class="smallInstruction" style="font-size: xx-small;">To turn off translation, select "English".</span><br>
+        <span class="smallInstruction" style="text-decoration: none; color:grey; cursor: pointer;" onclick="showinfo()"> ℹ️ info</span>
     </div>
     <br>
-    <button id="introRecent" onclick="clearLocalRecentWord()">Clear recent words</button>
+
+    <button id="introRecent" onclick="clearSavedRecentWords()">Clear recent words</button>
     <div id="recentWordID"></div>
 
     <script>
@@ -521,8 +586,9 @@
 
             }, { passive: false });
         }
-        function loadLocalList() {
-            displayHTML("recentWordID", prepareHTML(loadLastWords(localKEY), ''));
+        
+        function loadLocalRecentWords() {
+            displayHTML("recentWordID", prepareHTML(loadSavedData(KEY_RECENTWORDS), ''));
         }
 
         function returnMIPA() {
@@ -530,9 +596,11 @@
         }
 
         function runOnLoad() {
-            mIPA = returnMIPA();
+            buildLangListMenu();
 
-            loadLocalList();
+            mIPA = returnMIPA();
+            loadSavedLangCode("uSelectLangCode");
+            loadLocalRecentWords();
             listenEnter();
         }
         window.onload = runOnLoad;;
