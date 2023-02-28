@@ -158,6 +158,10 @@
             font-style: italic;
         }
 
+        .turnedOffPageTrans {
+            color: grey;
+        }
+
         .circleRadio input[type="radio"]:checked {
             /* Radio element, when checked */
             box-shadow: 0 -8px 6px -1px #4bd763, 0 8px 6px 0 #4bd763;
@@ -274,6 +278,7 @@
 
         .buildLangListMenuClass {
             font-size: xx-small;
+            color: grey;
         }
 
         #uSelectLangCode {
@@ -294,13 +299,13 @@
          * Shortcuts when using Sealang library - Burmese
          * http://sealang.net/api/api.pl?service=dictionary&language=burmese&query=happy
          */
-
+        
  
         var mIPA = {};
 
         var KEY_USERLANG = "userLangSealangLookUp";
         var KEY_RECENTWORDS = "recentSealangLookUp";
-        const DEFAULT_LANG = "en";
+        const DEFAULT_LANG = "turnedOffPageTrans";
 
         let usedLangCode = localStorage.getItem(KEY_USERLANG);
         let currentLangCode = usedLangCode ? usedLangCode : DEFAULT_LANG;
@@ -314,13 +319,13 @@
   let html = `
         <label for="uSelectLangCode">Translate into</label>
         <select id="uSelectLangCode" name="uSelectLangCode">
-        <option disabled value="">--Select a language--</option>`;
+        <option value="turnedOffPageTrans">-- Turned OFF --</option>`;
   for (const k in googleTranslateLangCode) {
     html += `<option value="${googleTranslateLangCode[k]}" ${
       googleTranslateLangCode[k] == currentLangCode ? "selected" : ""
     } >${k}</option>`;
   }
-  html += `<option disabled value="">--27 Feb 2023--</option>`;
+  html += `<option disabled value="">--List 28 Feb 2023--</option>`;
   html += `</select>`;
   document.getElementById("buildLangListMenu").innerHTML = html;
   listen_UserSelectLang("uSelectLangCode");
@@ -371,14 +376,24 @@ function lookup() {
     queryTypeValue = queryTypeValue || "dictionary";
 
     if (queryTypeValue == "google") {
-      window.open(
-        `https://translate.google.com/?sl=auto&tl=${currentLangCode}&text=${queryWord}`,
-        `_sealangWindow${queryTypeValue}`
-      );
+        // Handle URL translations
+        if (queryWord.startsWith("http://") || queryWord.startsWith("https://") || queryWord.startsWith("www.")) {
+            window.open(
+                `https://translate.google.com/translate?sl=auto&tl=${currentLangCode}&hl=${currentLangCode}&u=${encodeURL(
+            queryWord
+        )}`,
+                `_sealangWindow${queryTypeValue}`
+            );
+        } else {
+            window.open(
+                `https://translate.google.com/?sl=auto&tl=${currentLangCode}&hl=${currentLangCode}&text=${queryWord}`,
+                `_sealangWindow${queryTypeValue}`
+            );
+        }
     } else {
       let finalSeaLangURL = `${SEAL_LOOKUP_API}service=${queryTypeValue}&lang=${queryLanguage}&query=${queryWord}`;
 
-      if (currentLangCode != "en") {
+      if (currentLangCode != DEFAULT_LANG) {
         // Must encode the URL to let it works
         finalSeaLangURL = `https://translate.google.com/translate?sl=en&tl=${currentLangCode}&hl=${currentLangCode}&u=${encodeURL(
           finalSeaLangURL
@@ -508,7 +523,7 @@ function showinfo() {
 
 <body>
     <div id="uForm">
-        <b>Sealang - Shortcut v2.4</b><br />
+        <b>Sealang - Shortcut v2.5</b><br />
         <br /><button id="clearText" onclick="clearTextArea()">Clear Text</button><br />
 
         <textarea required cols="9" rows="2" id="uType" name="word" placeholder="Enter any Unicode text"
@@ -547,15 +562,21 @@ function showinfo() {
                 <td class="tLeft">Google</td>
             </tr>
             <tr>
-                <td colspan="4"><span class="smallInstruction" style="font-size: xx-small;">Notes: Bitexts and Corpus searches
-                    may take a while.</span></td>
+                <!-- <td colspan="4"><span class="smallInstruction" style="font-size: xx-small;">Notes: Bitexts and Corpus searches
+                    may take a while.</span></td> -->
             </tr>
 
         </table>
 
         </form>
-        <div class="buildLangListMenuClass" id="buildLangListMenu"></div><span class="smallInstruction" style="font-size: xx-small;">To turn off translation, select "English".</span><br>
-        <span class="smallInstruction" style="text-decoration: none; color:grey; cursor: pointer;" onclick="showinfo()"> ℹ️ info</span>
+        <div class="buildLangListMenuClass" id="buildLangListMenu"></div>
+        <span id="smallNote">
+            <span style="font-size: xx-small;">Notes: Bitexts and Corpus searches may take a while.</span>
+            <br />
+            <span style="text-decoration: none; color:grey; cursor: pointer;" onclick="showinfo()"> ℹ️
+            info</span>
+        </span>
+
     </div>
     <br>
 
