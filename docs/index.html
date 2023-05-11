@@ -133,7 +133,7 @@
             padding: 5px;
         }
 
-        #clearText {
+        #clearText, #pasteButton {
             border: orange dashed 1px;
             color: black;
             border-radius: 10%;
@@ -293,6 +293,7 @@
     </style>
     <script>
         /**
+         * Last update: 11 May 2023
          * Last update: 27 Feb 2023
          * @uPNRY - 27 Dec 2022
          * Github: vpnry/sealang
@@ -313,7 +314,7 @@
         var queryLanguage = `burmese`;
         var SEAL_LOOKUP_API = `http://sealang.net/api/api.pl?`;
 
-        const googleTranslateLangCode = { /**  * This supported language list is from https://cloud.google.com/translate/docs/languages  * Retrieved on 27 Feb 2023  * Language: "ISO-639 code"  */ Afrikaans: "af", Albanian: "sq", Amharic: "am", Arabic: "ar", Armenian: "hy", Assamese: "as", Aymara: "ay", Azerbaijani: "az", Bambara: "bm", Basque: "eu", Belarusian: "be", Bengali: "bn", Bhojpuri: "bho", Bosnian: "bs", Bulgarian: "bg", Catalan: "ca", Cebuano: "ceb", "Chinese (Simplified)": "zh-CN", "Chinese (Traditional)": "zh-TW", Corsican: "co", Croatian: "hr", Czech: "cs", Danish: "da", Dhivehi: "dv", Dogri: "doi", Dutch: "nl", English: "en", Esperanto: "eo", Estonian: "et", Ewe: "ee", "Filipino (Tagalog)": "fil", Finnish: "fi", French: "fr", Frisian: "fy", Galician: "gl", Georgian: "ka", German: "de", Greek: "el", Guarani: "gn", Gujarati: "gu", "Haitian Creole": "ht", Hausa: "ha", Hawaiian: "haw", Hebrew: "he or iw", Hindi: "hi", Hmong: "hmn", Hungarian: "hu", Icelandic: "is", Igbo: "ig", Ilocano: "ilo", Indonesian: "id", Irish: "ga", Italian: "it", Japanese: "ja", Javanese: "jv or jw", Kannada: "kn", Kazakh: "kk", Khmer: "km", Kinyarwanda: "rw", Konkani: "gom", Korean: "ko", Krio: "kri", Kurdish: "ku", "Kurdish (Sorani)": "ckb", Kyrgyz: "ky", Lao: "lo", Latin: "la", Latvian: "lv", Lingala: "ln", Lithuanian: "lt", Luganda: "lg", Luxembourgish: "lb", Macedonian: "mk", Maithili: "mai", Malagasy: "mg", Malay: "ms", Malayalam: "ml", Maltese: "mt", Maori: "mi", Marathi: "mr", "Meiteilon (Manipuri)": "mni-Mtei", Mizo: "lus", Mongolian: "mn", "Myanmar (Burmese)": "my", Nepali: "ne", Norwegian: "no", "Nyanja (Chichewa)": "ny", "Odia (Oriya)": "or", Oromo: "om", Pashto: "ps", Persian: "fa", Polish: "pl", "Portuguese (Portugal, Brazil)": "pt", Punjabi: "pa", Quechua: "qu", Romanian: "ro", Russian: "ru", Samoan: "sm", Sanskrit: "sa", "Scots Gaelic": "gd", Sepedi: "nso", Serbian: "sr", Sesotho: "st", Shona: "sn", Sindhi: "sd", "Sinhala (Sinhalese)": "si", Slovak: "sk", Slovenian: "sl", Somali: "so", Spanish: "es", Sundanese: "su", Swahili: "sw", Swedish: "sv", "Tagalog (Filipino)": "tl", Tajik: "tg", Tamil: "ta", Tatar: "tt", Telugu: "te", Thai: "th", Tigrinya: "ti", Tsonga: "ts", Turkish: "tr", Turkmen: "tk", "Twi (Akan)": "ak", Ukrainian: "uk", Urdu: "ur", Uyghur: "ug", Uzbek: "uz", Vietnamese: "vi", Welsh: "cy", Xhosa: "xh", Yiddish: "yi", Yoruba: "yo", Zulu: "zu",   };
+        const googleTranslateLangCode = { /**  * This supported language list is from https://cloud.google.com/translate/docs/languages  * Retrieved on 11 May 2023  * Language: "ISO-639 code"  */ Afrikaans: "af", Albanian: "sq", Amharic: "am", Arabic: "ar", Armenian: "hy", Assamese: "as", Aymara: "ay", Azerbaijani: "az", Bambara: "bm", Basque: "eu", Belarusian: "be", Bengali: "bn", Bhojpuri: "bho", Bosnian: "bs", Bulgarian: "bg", Catalan: "ca", Cebuano: "ceb", "Chinese (Simplified)": "zh-CN", "Chinese (Traditional)": "zh-TW", Corsican: "co", Croatian: "hr", Czech: "cs", Danish: "da", Dhivehi: "dv", Dogri: "doi", Dutch: "nl", English: "en", Esperanto: "eo", Estonian: "et", Ewe: "ee", "Filipino (Tagalog)": "fil", Finnish: "fi", French: "fr", Frisian: "fy", Galician: "gl", Georgian: "ka", German: "de", Greek: "el", Guarani: "gn", Gujarati: "gu", "Haitian Creole": "ht", Hausa: "ha", Hawaiian: "haw", Hebrew: "he or iw", Hindi: "hi", Hmong: "hmn", Hungarian: "hu", Icelandic: "is", Igbo: "ig", Ilocano: "ilo", Indonesian: "id", Irish: "ga", Italian: "it", Japanese: "ja", Javanese: "jv or jw", Kannada: "kn", Kazakh: "kk", Khmer: "km", Kinyarwanda: "rw", Konkani: "gom", Korean: "ko", Krio: "kri", Kurdish: "ku", "Kurdish (Sorani)": "ckb", Kyrgyz: "ky", Lao: "lo", Latin: "la", Latvian: "lv", Lingala: "ln", Lithuanian: "lt", Luganda: "lg", Luxembourgish: "lb", Macedonian: "mk", Maithili: "mai", Malagasy: "mg", Malay: "ms", Malayalam: "ml", Maltese: "mt", Maori: "mi", Marathi: "mr", "Meiteilon (Manipuri)": "mni-Mtei", Mizo: "lus", Mongolian: "mn", "Myanmar (Burmese)": "my", Nepali: "ne", Norwegian: "no", "Nyanja (Chichewa)": "ny", "Odia (Oriya)": "or", Oromo: "om", Pashto: "ps", Persian: "fa", Polish: "pl", "Portuguese (Portugal, Brazil)": "pt", Punjabi: "pa", Quechua: "qu", Romanian: "ro", Russian: "ru", Samoan: "sm", Sanskrit: "sa", "Scots Gaelic": "gd", Sepedi: "nso", Serbian: "sr", Sesotho: "st", Shona: "sn", Sindhi: "sd", "Sinhala (Sinhalese)": "si", Slovak: "sk", Slovenian: "sl", Somali: "so", Spanish: "es", Sundanese: "su", Swahili: "sw", Swedish: "sv", "Tagalog (Filipino)": "tl", Tajik: "tg", Tamil: "ta", Tatar: "tt", Telugu: "te", Thai: "th", Tigrinya: "ti", Tsonga: "ts", Turkish: "tr", Turkmen: "tk", "Twi (Akan)": "ak", Ukrainian: "uk", Urdu: "ur", Uyghur: "ug", Uzbek: "uz", Vietnamese: "vi", Welsh: "cy", Xhosa: "xh", Yiddish: "yi", Yoruba: "yo", Zulu: "zu",   };
 
         function buildLangListMenu() {
   let html = `
@@ -515,6 +516,14 @@ function showinfo() {
   document.getElementById("recentWordID").innerHTML = html;
 }
 
+      function pasteClipboard() {
+        if (Android) {
+          let text = window.Android.getClipboardText();
+          document.getElementById('uType').value = text;
+        } else {
+        alert("On Android app only");
+      }
+      } 
 
 
     </script>
@@ -523,14 +532,16 @@ function showinfo() {
 
 <body>
     <div id="uForm">
-        <b>Sealang - Shortcut v2.5</b><br />
-        <br /><button id="clearText" onclick="clearTextArea()">Clear Text</button><br />
+        <b>Sealang - Shortcut v2.6</b><br />
+        <br /><button id="clearText" onclick="clearTextArea()">&#x1F9F9; Clear</button>
+        <button style="margin-left: 10px;" id="pasteButton" onclick="pasteClipboard()">&#x1F4CB; Paste</button><br />
 
-        <textarea required cols="9" rows="2" id="uType" name="word" placeholder="Enter any Unicode text"
+        <textarea required cols="9" rows="2" id="uType" name="word" placeholder="Enter Eng/Myanmar Unicode text"
             value=""></textarea>
         <br />
         <div id="ipa"><span style="color:grey;">🤗 be well and happy!</span></div>
         <button id="lookupButton" onclick="lookup()">Look up</button>
+
         <table class="tCenter">
             <tr>
                 <td class="tLeft" colspan="4"><span class="greyText">Lookup Type</span></td>
