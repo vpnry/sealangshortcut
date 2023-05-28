@@ -16,6 +16,8 @@ This Sealang Shortcut is a simplified 'shortcut' for common queries. For other a
 
 + The pronunciation data is adapted from [myG2P](https://github.com/ye-kyaw-thu/myG2P/) - Creative Commons Attribution-NonCommercial-Share Alike 4.0 International (CC BY-NC-SA 4.0) License [Details Info of License](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
++ The Myanmar number to word function is adapted from [myanmar-num-to-word-js](https://github.com/stevenay/myanmar-num-to-word-js) - MIT License.
+
 + SEAlang Web [API](http://sealang.net/api/api.pl?service=identify)
 
 + For other languages and more features, check [SEAlang Library](http://sealang.net/library)
@@ -24,3 +26,11 @@ This Sealang Shortcut is a simplified 'shortcut' for common queries. For other a
 
 + Android Web-view [template](https://github.com/slymax/webview)
 
+## Misc.
+
+
+```bash
+# gh command create release
+gh release create v2.5 --title "Sealang Shortcut v2.5" --notes "Added Google Translation. Note: it will popup multi windows (Cross-Origin-Opener-Policy)" sealangshortcut_V2.5.apk --draft
+
+```
